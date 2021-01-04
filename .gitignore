@@ -1,0 +1,10 @@
+﻿################################################################################
+# This .gitignore file was automatically created by Microsoft(R) Visual Studio.
+################################################################################
+
+/.vs
+/EntityIdentifier/.vs/EntityIdentifer
+/EntityIdentifier/bin/Debug/netstandard2.0
+/EntityIdentifier/obj
+/EntityIdentifier_tests/bin/Debug
+/EntityIdentifier_tests/obj
