@@ -25,7 +25,7 @@ namespace EntityIdentifier_tests.GuidIDTests
 
         public static bool TryParse(string value, out PersonID entityID)
         {
-            if (IntIdentifier.TryParse(value, out var id))
+            if (GuidIdentifier.TryParse(value, out var id))
             {
                 entityID = (PersonID)id;
                 return true;
