@@ -8,3 +8,5 @@
 /EntityIdentifier/obj
 /EntityIdentifier_tests/bin/Debug
 /EntityIdentifier_tests/obj
+/EntityIdentifier/bin
+/EntityIdentifier_tests/bin/Release/netcoreapp2.1
