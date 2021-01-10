@@ -24,7 +24,7 @@ namespace EntityIdentifier_tests.StringIDTests
         {
             if (StringIdentifier.TryParse(value, out var id))
             {
-                entityID = (PersonID)id;
+                entityID = new PersonID(id);
                 return true;
             }
             else
