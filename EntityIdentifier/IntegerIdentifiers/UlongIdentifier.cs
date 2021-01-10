@@ -30,7 +30,7 @@ namespace SkiDiveDev.EntityIdentifier
         }
 
 
-        public static bool TryParse(string value, out IIdentifier<ulong> id)
+        public static bool TryParse(string value, out UlongIdentifier id)
         {
             if (ulong.TryParse(value, out var ulongID))
             {

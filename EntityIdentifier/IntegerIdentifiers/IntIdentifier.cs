@@ -30,7 +30,7 @@ namespace SkiDiveDev.EntityIdentifier
         }
 
 
-        public static bool TryParse(string value, out IIdentifier<int> id)
+        public static bool TryParse(string value, out IntIdentifier id)
         {
             if (int.TryParse(value, out var intID))
             {
