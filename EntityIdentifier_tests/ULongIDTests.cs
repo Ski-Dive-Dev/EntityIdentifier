@@ -54,58 +54,37 @@ namespace EntityIdentifier_tests.UlongIDTests
     }
 
 
-    public class ULongIDTests
+    public class ULongIDTests : EntityIDTests<PersonIDFactory>
     {
-        readonly PersonIDFactory idFactory = new PersonIDFactory();
-        EntityIDTests<PersonIDFactory> entityIDTests;
-
-        Person personWithPresetID;
+        private const int validID = 12345678;
+        private const int firstFactoryGeneratedID = 1;
 
         [SetUp]
         public void SetUp()
         {
+            idFactory = new PersonIDFactory();
+            firstFactoryGeneratedIDAsString = firstFactoryGeneratedID.ToString();
+            validIDAsString = validID.ToString();
+            invalidIDAsString = "x123";
+
             personWithPresetID = new Person
             {
                 GivenName = "Person whose ID",
                 Surname = "Not tied to injected factory",
-                ID = new PersonID(1)
+                ID = new PersonID(firstFactoryGeneratedID)
             };
 
-            entityIDTests = new EntityIDTests<PersonIDFactory>(idFactory, personWithPresetID);
-            entityIDTests.SetUp();
+            CommonSetUp();
         }
 
-        [Test]
-        public void ShouldAssignIDWithoutChange()
-        {
-            entityIDTests.ShouldAssignIDWithoutChange();
-        }
-
-        [Test]
-        public void TestIDIsNotAssigned()
-        {
-            entityIDTests.TestIDIsNotAssigned();
-        }
-
-        [Test]
-        public void TestIDIsAssigned()
-        {
-            entityIDTests.TestIDIsAssigned();
-        }
-
-        [Test]
-        public void ShouldReturnIDAsString()
-        {
-            entityIDTests.ShouldReturnIDAsString(personWithPresetID, "1");
-        }
 
         [Test]
         public void ShouldCreateEntityIDFromString()
         {
             // arrange
-            var expected = new PersonID(12345678);
+            var expected = new PersonID(validID);
 
-            var idToParse = "12345678";
+            var idToParse = validIDAsString;
 
             // act
             var actual = new PersonID(idToParse);
@@ -114,23 +93,5 @@ namespace EntityIdentifier_tests.UlongIDTests
             Assert.AreEqual(expected, actual);
         }
 
-
-        [Test]
-        public void IDEqualityTests()
-        {
-            entityIDTests.IDEqualityTests();
-        }
-
-        [Test]
-        public void ShouldSortEntitiesAscendingByID()
-        {
-            entityIDTests.ShouldSortEntitiesAscendingByID();
-        }
-
-        [Test]
-        public void ShouldSortEntitiesDescendingByID()
-        {
-            entityIDTests.ShouldSortEntitiesDescendingbyID();
-        }
     }
 }

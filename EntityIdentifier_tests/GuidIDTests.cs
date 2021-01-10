@@ -63,51 +63,26 @@ namespace EntityIdentifier_tests.GuidIDTests
     }
 
 
-    public class GuidIDTests
+    public class GuidIDTests : EntityIDTests<PersonIDFactory>
     {
-        readonly PersonIDFactory idFactory = new PersonIDFactory();
-        EntityIDTests<PersonIDFactory> entityIDTests;
-
-        Person personWithPresetID;
-
         [SetUp]
         public void SetUp()
         {
+            idFactory = new PersonIDFactory();
+            firstFactoryGeneratedIDAsString = "00000000-0000-0000-0000-000000000001";
+            validIDAsString = "00000000-0000-0000-0000-000000000001";
+            invalidIDAsString = "00000000-0000-0000-0000-00000000000X";
+
             personWithPresetID = new Person
             {
                 GivenName = "Person whose ID",
                 Surname = "Not tied to injected factory",
-                ID = new PersonID(Guid.Parse("00000000-0000-0000-0000-000000000001"))
+                ID = new PersonID(Guid.Parse(firstFactoryGeneratedIDAsString))
             };
 
-            entityIDTests = new EntityIDTests<PersonIDFactory>(idFactory, personWithPresetID);
-            entityIDTests.SetUp();
+            CommonSetUp();
         }
 
-
-        [Test]
-        public void ShouldCreateID()
-        {
-            entityIDTests.ShouldAssignIDWithoutChange();
-        }
-
-        [Test]
-        public void TestIDIsNotAssigned()
-        {
-            entityIDTests.TestIDIsNotAssigned();
-        }
-
-        [Test]
-        public void TestIDIsAssigned()
-        {
-            entityIDTests.TestIDIsAssigned();
-        }
-
-        [Test]
-        public void ShouldReturnIDAsString()
-        {
-            entityIDTests.ShouldReturnIDAsString(personWithPresetID, "00000000-0000-0000-0000-000000000001");
-        }
 
         [Test]
         public void ShouldCreateEntityIDFromString()
@@ -125,22 +100,60 @@ namespace EntityIdentifier_tests.GuidIDTests
             Assert.AreEqual(expected, actual);
         }
 
+
         [Test]
-        public void GuidIDEqualityTests()
+        public void ShouldReturnFalseForTryParse()
         {
-            entityIDTests.IDEqualityTests();
+            // arrange
+            var guidToParse = invalidIDAsString;
+
+            // act
+            var actual = PersonID.TryParse(guidToParse, out PersonID entityID);
+
+            // assert
+            Assert.IsFalse(actual);
         }
 
         [Test]
-        public void ShouldSortEntitiesAscendingByID()
+        public void ShouldReturnTrueForTryParse()
         {
-            entityIDTests.ShouldSortEntitiesAscendingByID();
+            // arrange
+            var guidToParse = validIDAsString;
+
+            // act
+            var actual = PersonID.TryParse(guidToParse, out PersonID entityID);
+
+            // assert
+            Assert.IsTrue(actual);
         }
 
         [Test]
-        public void ShouldSortEntitiesDescendingByID()
+        public void ShouldReturnEntityIdentifierForTryParse()
         {
-            entityIDTests.ShouldSortEntitiesDescendingbyID();
+            // arrange
+            var idToParse = validIDAsString;
+            var expected = new PersonID(idToParse);
+
+            // act
+            var success = PersonID.TryParse(idToParse, out PersonID actual);
+
+            // assert
+            Assert.AreEqual(expected, actual);
         }
+
+        [Test]
+        public void ShouldReturnDefaultEntityIdentifierForTryParse()
+        {
+            // arrange
+            var idToParse = invalidIDAsString;
+            var expected = new PersonID();
+
+            // act
+            var success = PersonID.TryParse(idToParse, out PersonID actual);
+
+            // assert
+            Assert.AreEqual(expected, actual);
+        }
+
     }
 }

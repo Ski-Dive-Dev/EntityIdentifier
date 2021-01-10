@@ -54,58 +54,38 @@ namespace EntityIdentifier_tests.IntegerIDTests
     }
 
 
-    public class IntIDTests
+    public class IntIDTests : EntityIDTests<PersonIDFactory>
     {
-        readonly PersonIDFactory idFactory = new PersonIDFactory();
-        EntityIDTests<PersonIDFactory> entityIDTests;
-
-        Person personWithPresetID;
+        private const int validID = 12345678;
+        private const int firstFactoryGeneratedID = 1;
 
         [SetUp]
         public void SetUp()
         {
+            idFactory = new PersonIDFactory();
+            firstFactoryGeneratedIDAsString = firstFactoryGeneratedID.ToString();
+            
+            validIDAsString = validID.ToString();
+            invalidIDAsString = "x123";
+
             personWithPresetID = new Person
             {
                 GivenName = "Person whose ID",
                 Surname = "Not tied to injected factory",
-                ID = new PersonID(1) // We can do this, because we know the first Factory-created ID is 1.
+                ID = new PersonID(firstFactoryGeneratedID)
             };
 
-            entityIDTests = new EntityIDTests<PersonIDFactory>(idFactory, personWithPresetID);
-            entityIDTests.SetUp();
+            CommonSetUp();
         }
 
-        [Test]
-        public void ShouldAssignIDWithoutChange()
-        {
-            entityIDTests.ShouldAssignIDWithoutChange();
-        }
-
-        [Test]
-        public void TestIDIsNotAssigned()
-        {
-            entityIDTests.TestIDIsNotAssigned();
-        }
-
-        [Test]
-        public void TestIDIsAssigned()
-        {
-            entityIDTests.TestIDIsAssigned();
-        }
-
-        [Test]
-        public void ShouldReturnIDAsString()
-        {
-            entityIDTests.ShouldReturnIDAsString(personWithPresetID, "1");
-        }
 
         [Test]
         public void ShouldCreateEntityIDFromString()
         {
             // arrange
-            var expected = new PersonID(12345678);
+            var expected = new PersonID(validID);
 
-            var idToParse = "12345678";
+            var idToParse = validIDAsString;
 
             // act
             var actual = new PersonID(idToParse);
@@ -115,22 +95,60 @@ namespace EntityIdentifier_tests.IntegerIDTests
         }
 
 
+
+
         [Test]
-        public void IDEqualityTests()
+        public void ShouldReturnFalseForTryParse()
         {
-            entityIDTests.IDEqualityTests();
+            // arrange
+            var idToParse = invalidIDAsString;
+
+            // act
+            var actual = PersonID.TryParse(idToParse, out PersonID entityID);
+
+            // assert
+            Assert.IsFalse(actual);
         }
 
         [Test]
-        public void ShouldSortEntitiesAscendingByID()
+        public void ShouldReturnTrueForTryParse()
         {
-            entityIDTests.ShouldSortEntitiesAscendingByID();
+            // arrange
+            var idToParse = validIDAsString;
+
+            // act
+            var actual = PersonID.TryParse(idToParse, out PersonID entityID);
+
+            // assert
+            Assert.IsTrue(actual);
         }
 
         [Test]
-        public void ShouldSortEntitiesDescendingByID()
+        public void ShouldReturnEntityIdentifierForTryParse()
         {
-            entityIDTests.ShouldSortEntitiesDescendingbyID();
+            // arrange
+            var idToParse = validIDAsString;
+            var expected = new PersonID(idToParse);
+
+            // act
+            var success = PersonID.TryParse(idToParse, out PersonID actual);
+
+            // assert
+            Assert.AreEqual(expected, actual);
+        }
+
+        [Test]
+        public void ShouldReturnDefaultEntityIdentifierForTryParse()
+        {
+            // arrange
+            var idToParse = invalidIDAsString;
+            var expected = new PersonID();
+
+            // act
+            var success = PersonID.TryParse(idToParse, out PersonID actual);
+
+            // assert
+            Assert.AreEqual(expected, actual);
         }
     }
 }

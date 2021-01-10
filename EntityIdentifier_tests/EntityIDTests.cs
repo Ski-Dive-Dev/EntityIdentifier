@@ -17,21 +17,19 @@ namespace EntityIdentifier_tests
     /// <see cref="IIdentifier"/>.</typeparam>
     public class EntityIDTests<PersonIDFactory> where PersonIDFactory : IIdentifierFactory
     {
-        readonly PersonIDFactory idFactory;
+        protected PersonIDFactory idFactory;
+
+        protected string firstFactoryGeneratedIDAsString;
+        protected string validIDAsString;
+        protected string invalidIDAsString;
 
         Person p1;
         Person p2;
         Person p3;
-        readonly Person injectedPerson;
-
-        public EntityIDTests(PersonIDFactory personIDFactory, Person injectedPerson)
-        {
-            idFactory = personIDFactory;
-            this.injectedPerson = injectedPerson;
-        }
+        protected IPerson personWithPresetID;
 
 
-        public void SetUp()
+        public void CommonSetUp()
         {
             p1 = new Person()
             {
@@ -56,18 +54,20 @@ namespace EntityIdentifier_tests
             };
         }
 
+        [Test]
         public void ShouldAssignIDWithoutChange()
         {
             // arrange
-            injectedPerson.ID = p1.ID;
+            personWithPresetID.ID = p1.ID;
 
             // act
-            var idAsExpected = p1.ID.Equals(injectedPerson.ID);
+            var idAsExpected = p1.ID.Equals(personWithPresetID.ID);
 
             // assert
             Assert.IsTrue(idAsExpected);
         }
 
+        [Test]
         public void TestIDIsAssigned()
         {
             var person = new Person
@@ -78,6 +78,7 @@ namespace EntityIdentifier_tests
             Assert.IsTrue(person.ID.IDIsAssigned);
         }
 
+        [Test]
         public void TestIDIsNotAssigned()
         {
             var person = new Person();
@@ -86,14 +87,21 @@ namespace EntityIdentifier_tests
         }
 
 
-        public void ShouldReturnIDAsString(Person person, string expected)
+        [Test]
+        public void ShouldReturnIDAsString()
         {
-            var actual = person.ID.ToString();
+            // arrange
+            var expected = firstFactoryGeneratedIDAsString;
 
+            // act
+            var actual = personWithPresetID.ID.ToString();
+
+            // assert
             Assert.AreEqual(expected, actual);
         }
 
 
+        [Test]
         public void IDEqualityTests()
         {
             // act
@@ -111,6 +119,7 @@ namespace EntityIdentifier_tests
             Assert.IsFalse(p1_p3);
         }
 
+        [Test]
         public void ShouldSortEntitiesAscendingByID()
         {
             // arrange
@@ -125,6 +134,7 @@ namespace EntityIdentifier_tests
         }
 
 
+        [Test]
         public void ShouldSortEntitiesDescendingbyID()
         {
             // arrange
