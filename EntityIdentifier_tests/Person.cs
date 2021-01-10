@@ -3,7 +3,7 @@ using SkiDiveDev.EntityIdentifier;
 
 namespace SkiDiveDev.EntityIdentifier_tests
 {
-    public class Person
+    public class Person : IPerson
     {
         public IIdentifier ID { get; set; }
 
